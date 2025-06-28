@@ -111,13 +111,33 @@
 //     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   // }
 // }
+// {
+//   "compilerOptions": {
+//     "module": "commonjs", // or "ESNext"
+//     "moduleResolution": "node",
+//     "baseUrl": "./",
+//     "paths": {
+//       "*": ["src/*"]
+//     }
+//   }
+// }
+
 {
   "compilerOptions": {
-    "module": "commonjs", // or "ESNext"
-    "moduleResolution": "node",
-    "baseUrl": "./",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "target": "ES2020",
+    "esModuleInterop": true, // Enable this to allow default imports for CommonJS modules
+    "allowSyntheticDefaultImports": true, // Optional, for additional flexibility with imports
+    "outDir": "./dist",
+    "strict": true,
+    "types": ["node", "mongoose", "express"], // Include express types
+    "baseUrl": ".",
     "paths": {
-      "*": ["src/*"]
+      "@utils/*": ["utils/*"],
+      "@models/*": ["models/*"]
     }
-  }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }

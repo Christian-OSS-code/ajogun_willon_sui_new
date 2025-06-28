@@ -1,6 +1,6 @@
 
 
-import * as express from 'express';
+import express from 'express';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import { createWallet, getWallet } from '../controllers/wallet.controller.js';

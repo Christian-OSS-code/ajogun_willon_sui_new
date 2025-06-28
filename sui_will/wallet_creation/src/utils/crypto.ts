@@ -14,3 +14,4 @@ export function decrypt(encrypted: string, iv: string, password: string, salt: s
   const decipher = crypto.createDecipheriv('aes-256-cbc', key, Buffer.from(iv, 'hex'));
   return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
 }
+
