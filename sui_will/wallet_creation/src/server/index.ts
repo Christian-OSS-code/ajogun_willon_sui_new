@@ -3,11 +3,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import walletController from '../controllers/wallet.controller';
+import { createWallet, getWallet, getBalance } from '../controllers/wallet.controller';
 
 dotenv.config();
-console.log('WALRUS_URI:', process.env.WALRUS_URI);
-console.log('Wallet Controller:', walletController);
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Missing environment variable: MONGODB_URI');
@@ -16,12 +14,8 @@ if (!process.env.MONGODB_URI) {
 const app = express();
 app.use(express.json());
 
-if (!process.env.WALRUS_URI) {
-  throw new Error('Missing environment variable: WALRUS_URI');
-}
-
 mongoose
-  .connect(process.env.WALRUS_URI!)
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Connected to database');
   })
@@ -29,11 +23,14 @@ mongoose
     console.error(' Database connection error:', err);
   });
 
-app.post('/wallet/create', walletController.createWallet);
-app.get('/wallet/:userId', walletController.getWallet);
-app.get('/wallet/:userId/balance', walletController.getBalance);
+app.post('/wallet/create', createWallet);
+app.get('/wallet/:userId', getWallet);
+app.get('/wallet/:userId/balance', getBalance);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
+
+
+
