@@ -1,24 +1,3 @@
-// {
-//   "compilerOptions": {
-//     "target": "es2018",
-//     "module": "commonjs",
-//     "strict": true,
-//     "esModuleInterop": true,
-//     "moduleResolution": "node",
-//     "types": ["node", "express", "bip39"],
-//     "outDir": "./dist",
-//     "rootDir": "./src",
-//     "allowSyntheticDefaultImports": true,
-//     "skipLibCheck": true
-//   },
-//   "include": ["src/**/*"],
-//   "exclude": ["node_modules", "dist"],
-//   "ts-node": {
-//     "transpileOnly": true,
-//     "require": ["ts-node/register"]
-//   }
-// }
-
 
 
 {
