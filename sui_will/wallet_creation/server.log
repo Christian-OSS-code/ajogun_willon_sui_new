@@ -189,3 +189,80 @@ Error: listen EADDRINUSE: address already in use :::3000
 [INFO] 18:09:32 Restarting: /home/christian/ajogun_willon_sui/sui_will/wallet_creation/tsconfig.json has been modified
 🚀 Server running at http://localhost:3000
 Connected to database
+Balance fetch failed: TypeError: fetch failed
+    at node:internal/deps/undici/undici:13510:13
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at SuiHTTPTransport.request (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/@mysten/sui/src/client/http-transport.ts:93:15)
+    at SuiClient.getBalance (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/@mysten/sui/src/client/client.ts:238:10)
+    at getBalance (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/controllers/wallet.controller.ts:95:21) {
+  [cause]: Error: getaddrinfo ENOTFOUND fullnode.testnet.sui.io
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'fullnode.testnet.sui.io'
+  }
+}
+Balance fetch failed: SuiHTTPStatusError: Unexpected status code: 503
+    at SuiHTTPTransport.request (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/@mysten/sui/src/client/http-transport.ts:113:10)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at SuiClient.getBalance (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/@mysten/sui/src/client/client.ts:238:10)
+    at getBalance (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/controllers/wallet.controller.ts:95:21) {
+  status: 503,
+  statusText: 'Service Unavailable'
+}
+[INFO] 21:48:38 Restarting: /home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/controllers/wallet.controller.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+    at listenInCluster (node:net:1965:12)
+    at Server.listen (node:net:2067:7)
+    at Function.listen (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts:31:5)
+    at Module._compile (node:internal/modules/cjs/loader:1529:14)
+    at Module._compile (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/tmp/ts-node-dev-hook-10784484125867189.js:69:33)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at require.extensions..jsx.require.extensions..js (/tmp/ts-node-dev-hook-10784484125867189.js:114:20)
+[ERROR] 21:48:40 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 22:57:32 Restarting: /home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+    at listenInCluster (node:net:1965:12)
+    at Server.listen (node:net:2067:7)
+    at Function.listen (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts:31:5)
+    at Module._compile (node:internal/modules/cjs/loader:1529:14)
+    at Module._compile (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/tmp/ts-node-dev-hook-10784484125867189.js:69:33)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at require.extensions..jsx.require.extensions..js (/tmp/ts-node-dev-hook-10784484125867189.js:114:20)
+[ERROR] 22:57:35 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 22:57:35 Restarting: /home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts has been modified
+🚀 Server running at http://localhost:3000
+Connected to database
+[INFO] 22:57:39 Restarting: /home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+    at listenInCluster (node:net:1965:12)
+    at Server.listen (node:net:2067:7)
+    at Function.listen (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts:31:5)
+    at Module._compile (node:internal/modules/cjs/loader:1529:14)
+    at Module._compile (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/tmp/ts-node-dev-hook-10784484125867189.js:69:33)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at require.extensions..jsx.require.extensions..js (/tmp/ts-node-dev-hook-10784484125867189.js:114:20)
+[ERROR] 22:57:41 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 22:57:43 Restarting: /home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+    at listenInCluster (node:net:1965:12)
+    at Server.listen (node:net:2067:7)
+    at Function.listen (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/src/server/index.ts:31:5)
+    at Module._compile (node:internal/modules/cjs/loader:1529:14)
+    at Module._compile (/home/christian/ajogun_willon_sui/sui_will/wallet_creation/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/tmp/ts-node-dev-hook-10784484125867189.js:69:33)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at require.extensions..jsx.require.extensions..js (/tmp/ts-node-dev-hook-10784484125867189.js:114:20)
+[ERROR] 22:57:44 Error: listen EADDRINUSE: address already in use :::3000

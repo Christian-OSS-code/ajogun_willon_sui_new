@@ -1,5 +1,4 @@
 
-
 import express from 'express';
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
@@ -7,6 +6,7 @@ import { encrypt, decrypt, generateMnemonic } from '../utils/crypto';
 import { WalletModel } from '../models/wallet.model';
 import * as crypto from 'crypto';
 import * as dotenv from 'dotenv';
+import { Transaction } from '@mysten/sui/transactions';
 
 dotenv.config();
 
@@ -104,5 +104,47 @@ export const getBalance = async (req: express.Request, res: express.Response) =>
   }
 };
 
+export const transferTokens = async (req: express.Request, res: express.Response) => {
+    try {
+      const { userId, recipient, amount, password } = req.body;
+      if (!userId || !recipient || !amount || !password) {
+        return res.status(400).json({ message: 'Missing userId, recipient, amount, or password' });
+      }
+      if (!recipient.startsWith('0x') || recipient.length !== 66) {
+        return res.status(400).json({ message: 'Invalid recipient address' });
+      }
+      const amountNum = parseInt(amount);
+      if (isNaN(amountNum) || amountNum <= 0) {
+        return res.status(400).json({ message: 'Invalid amount' });
+      }
+
+      const wallet = await WalletModel.findOne({ userId });
+      if (!wallet) {
+        return res.status(404).json({ message: 'Wallet not found' });
+      }
+
+      const privateKeyBase64 = decrypt(wallet.encryptedPrivateKey, wallet.privateKeyIv, password, wallet.salt);
+      const privateKey = Buffer.from(privateKeyBase64, 'base64');
+      const keypair = Ed25519Keypair.fromSecretKey(privateKey);
+
+      const tx = new Transaction();
+      const [coin] = tx.splitCoins(tx.gas, [amountNum]);
+      tx.transferObjects([coin], recipient);
+      tx.setGasBudget(1000000);
+
+      const result = await client.signAndExecuteTransaction({
+        transaction: tx,
+        signer: keypair,
+      });
+
+      return res.status(200).json({
+        transactionDigest: result.digest,
+        message: `Transferred ${amountNum} MIST to ${recipient}`,
+      });
+    } catch (error) {
+      console.error('Token transfer failed:', error);
+      return res.status(500).json({ message: 'Error transferring tokens' });
+    }
+  };
 
 

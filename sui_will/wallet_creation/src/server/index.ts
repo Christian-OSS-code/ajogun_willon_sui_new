@@ -3,7 +3,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { createWallet, getWallet, getBalance } from '../controllers/wallet.controller';
+import { createWallet, getWallet, getBalance, transferTokens } from '../controllers/wallet.controller';
 
 dotenv.config();
 
@@ -26,6 +26,7 @@ mongoose
 app.post('/wallet/create', createWallet);
 app.get('/wallet/:userId', getWallet);
 app.get('/wallet/:userId/balance', getBalance);
+app.get('/wallet/:userId/transfer', transferTokens);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
