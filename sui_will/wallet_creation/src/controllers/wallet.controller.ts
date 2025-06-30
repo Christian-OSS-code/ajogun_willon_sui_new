@@ -106,7 +106,8 @@ export const getBalance = async (req: express.Request, res: express.Response) =>
 
 export const transferTokens = async (req: express.Request, res: express.Response) => {
     try {
-      const { userId, recipient, amount, password } = req.body;
+      const { userId } = req.params;
+      const {recipient, amount, password} = req.body;
       if (!userId || !recipient || !amount || !password) {
         return res.status(400).json({ message: 'Missing userId, recipient, amount, or password' });
       }

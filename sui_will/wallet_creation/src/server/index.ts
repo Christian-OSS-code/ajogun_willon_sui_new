@@ -26,7 +26,7 @@ mongoose
 app.post('/wallet/create', createWallet);
 app.get('/wallet/:userId', getWallet);
 app.get('/wallet/:userId/balance', getBalance);
-app.get('/wallet/:userId/transfer', transferTokens);
+app.post('/wallet/:userId/transfer', transferTokens);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
