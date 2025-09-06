@@ -1,39 +1,8 @@
-// import mongoose from 'mongoose';
-// const WalletSchema = new mongoose.Schema({
-//   userId: {
-//     type: String,
-//     required: true,
-//     unique: true,
-//   },
-//   address: {
-//     type: String,
-//     required: true,
-//     unique: true,
-//   },
-//   encryptedPrivateKey: {
-//     type: String,
-//     required: true,
-//   },
-//   privateKeyIv: {
-//     type: String,
-//     required: true,
-//   },
-//   encryptedMnemonic: {
-//     // Add encrypted mnemonic
-//     type: String,
-//     required: true,
-//   },
-//   mnemonicIv: {
-//     // Add IV for mnemonic encryption
-//     type: String,
-//     required: true,
-//   },
-// }, {
-//   timestamps: true,
-// });
-// export const WalletModel = mongoose.model('Wallet', WalletSchema);
-import { Schema, model } from 'mongoose';
-const walletSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.WalletModel = void 0;
+const mongoose_1 = require("mongoose");
+const walletSchema = new mongoose_1.Schema({
     userId: { type: String, required: true },
     address: { type: String, required: true },
     encryptedPrivateKey: { type: String, required: true },
@@ -42,4 +11,4 @@ const walletSchema = new Schema({
     mnemonicIv: { type: String, required: true },
     salt: { type: String, required: true },
 }, { timestamps: true });
-export const WalletModel = model('Wallet', walletSchema);
+exports.WalletModel = (0, mongoose_1.model)('Wallet', walletSchema);
