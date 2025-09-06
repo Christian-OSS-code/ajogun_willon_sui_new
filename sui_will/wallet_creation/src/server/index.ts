@@ -4,6 +4,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { createWallet, getWallet, getBalance, transferTokens } from '../controllers/wallet.controller';
+import willRoutes from '../routes/wil_router';
+
 
 dotenv.config();
 
@@ -27,6 +29,7 @@ app.post('/wallet/create', createWallet);
 app.get('/wallet/:userId', getWallet);
 app.get('/wallet/:userId/balance', getBalance);
 app.post('/wallet/:userId/transfer', transferTokens);
+app.use('/will', willRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
