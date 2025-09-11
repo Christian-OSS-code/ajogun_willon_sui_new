@@ -43,9 +43,7 @@ export function decrypt(encrypted: string, iv: string, password: string, salt: s
       throw new Error('Failed to decrypt data: ' + String(error));
     }
   }
-
-
-  
+ 
 }
 export function generateMnemonic(): string {
   return bip39.generateMnemonic();

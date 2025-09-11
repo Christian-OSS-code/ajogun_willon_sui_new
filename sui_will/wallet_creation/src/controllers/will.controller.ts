@@ -8,9 +8,9 @@ import { parse } from 'path';
 
 
 
-const PACKAGE_ID = '0xcf3df26d35ec4757cac34f0a6bd89b3e90eb8c5226d6d2eb21e7b6f7117707eb';
-const WILL_STORE_OBJECT_ID = '0x41d81d9bbf3389b6367d073ce47e004d8acc3bb63f7557939d0378b6c17e26bf';
-const ADMIN_CAP_OBJECT_ID = '0x2a6ff4ba4612613a8e9034e90161ce69ecc441494a8b45594cbd04a50546d328';
+const PACKAGE_ID = '0x0aa86b3a3dbccc992c325bb729616faec30f03ddaf60944352ab6f198615f621';
+const WILL_STORE_OBJECT_ID = '0x91aa2d66fc5b4c56ebc665c5a24616850933c43e6f3ea368d260b9353253b23e';
+const ADMIN_CAP_OBJECT_ID = '0xeb491e20551757a7f500c6b0b82fb342f4eee383cf4aa66a759d2cd4011dae0a';
 
 const client = new SuiClient({ url: getFullnodeUrl('testnet') });
 
@@ -108,4 +108,6 @@ export const revokeWill = async (req: express.Request, res: express.Response) =>
         }
 
     };
+
+    
 
