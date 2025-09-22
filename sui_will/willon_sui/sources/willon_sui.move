@@ -125,7 +125,6 @@ module willon_sui::willon_sui {
         
         event::emit(WillIsCreated { owner: sender, index });
     }
-
     public entry fun update_activity(
         will_store: &mut WillStore,
         index: u64,
@@ -408,10 +407,6 @@ module willon_sui::willon_sui {
         index: u64,
         timestamp: u64,
     }
-
-
-
-
 
 }
 

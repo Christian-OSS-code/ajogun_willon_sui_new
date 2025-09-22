@@ -48,16 +48,17 @@ class WillAutomationRelayer {
 
         console.log('✅ Relayer scheduler initialized - running every 15 seconds');
     }
-
-    public async registerWill(owner: string, index: number) {
-        const willKey = `${owner}-${index}`;
-        this.activeWills.set(willKey, {
-            owner,
-            index,
-            lastChecked: new Date()
-        });
-        console.log(`📝 Registered will for monitoring: ${willKey}`);
-    }
+    
+public async registerWill(owner: string, index: number) {
+    
+    const willKey = `${owner}-${index}`;
+    this.activeWills.set(willKey, {
+        owner, 
+        index,
+        lastChecked: new Date()
+    });
+    console.log(`📝 Registered will for monitoring: ${willKey}`);
+}
 
     public async unregisterWill(owner: string, index: number) {
         const willKey = `${owner}-${index}`;
@@ -65,79 +66,31 @@ class WillAutomationRelayer {
         console.log(`🗑️ Unregistered will from monitoring: ${willKey}`);
     }
 
+
     private async checkAndExecuteWills() {
-        for (const [willKey, willInfo] of this.activeWills.entries()) {
-            try {
-                const isReady = await this.checkWillReady(willInfo.owner, willInfo.index);
-                
-                if (isReady) {
-                    console.log(`🚀 Will ${willKey} is ready for execution!`);
-                    await this.executeWillAutomatically(willInfo.owner, willInfo.index);
-                    this.activeWills.delete(willKey);
-                    console.log(`✅ Successfully executed will: ${willKey}`);
-                } else {
-                    willInfo.lastChecked = new Date();
-                    console.log(`⏳ Will ${willKey} not ready yet`);
-                }
-            } catch (error) {
-                console.error(`❌ Error processing will ${willKey}:`, error);
+    for (const [willKey, willInfo] of this.activeWills.entries()) {
+        try {
+            console.log(`🔍 Checking will: ${willKey}`);
+            const isReady = await this.checkWillReady(willInfo.owner, willInfo.index);
+            
+            if (isReady) {
+                console.log(`🚀 Will ${willKey} is ready for execution! Attempting execution...`);
+                await this.executeWillAutomatically(willInfo.owner, willInfo.index);
+                this.activeWills.delete(willKey);
+                console.log(`✅ Successfully executed and removed will: ${willKey}`);
+            } else {
+                willInfo.lastChecked = new Date();
+                console.log(`⏳ Will ${willKey} not ready yet. Last checked: ${willInfo.lastChecked}`);
             }
+        } catch (error) {
+            console.error(`❌ Error processing will ${willKey}:`, error);
         }
     }
-
-    // private async checkWillReady(ownerAddress: string, willIndex: number): Promise<boolean> {
-    //     try {
-    //         const txb = new Transaction();
-            
-    //         txb.moveCall({
-    //             target: `${PACKAGE_ID}::willon_sui::check_will_ready`,
-    //             arguments: [
-    //                 txb.object(WILL_STORE_OBJECT_ID),
-    //                 txb.pure.address(ownerAddress),
-    //                 txb.pure.u64(BigInt(willIndex)),
-    //                 txb.object(CLOCK_OBJECT_ID),
-    //             ],
-    //         });
-
-    //         const result = await client.devInspectTransactionBlock({
-    //             transactionBlock: txb,
-    //             sender: relayerAddress,
-    //         });
-
-    //         console.log(`🔍 Relayer checking will: ${ownerAddress}-${willIndex}`);
-    //         console.log("Status:", result.effects?.status?.status);
-    //         console.log("Events found:", result.events?.length);
-
-    //         if (result.events && result.events.length > 0) {
-    //             console.log("All event types:", result.events.map((e: any) => e.type));
-                
-    //             const willReadyEvent = result.events.find((event: any) => 
-    //                 event.type?.includes('WillReadyEvent')
-    //             );
-                
-    //             if (willReadyEvent && willReadyEvent.parsedJson) {
-    //                 const eventData = willReadyEvent.parsedJson as WillReadyEventData;
-    //                 console.log(`Will readiness: ${eventData.is_ready}`);
-    //                 return eventData.is_ready;
-    //             } else {
-    //                 console.log("WillReadyEvent not found or has no parsedJson");
-    //             }
-    //         } else {
-    //             console.log("No events found in transaction result");
-    //         }
-            
-    //         return false;
-    //     } catch (error) {
-    //         console.error('❌ Error checking will readiness:', error);
-    //         return false;
-    //     }
-    // }
-
+}
 
     private async checkWillReady(ownerAddress: string, willIndex: number): Promise<boolean> {
     try {
         const txb = new Transaction();
-        
         txb.moveCall({
             target: `${PACKAGE_ID}::willon_sui::check_will_ready`,
             arguments: [
@@ -153,7 +106,6 @@ class WillAutomationRelayer {
             sender: relayerAddress,
         });
 
-        // Check for events
         if (result.events && result.events.length > 0) {
             const willReadyEvent = result.events.find((event: any) => 
                 event.type?.includes('WillReadyEvent')
@@ -162,13 +114,8 @@ class WillAutomationRelayer {
             if (willReadyEvent && willReadyEvent.parsedJson) {
                 const eventData = willReadyEvent.parsedJson as WillReadyEventData;
                 
-                // Use BigInt for timestamp comparison to avoid precision issues
-                const currentTimestamp = BigInt(eventData.timestamp);
-                const willAutoExecuteTime = currentTimestamp + BigInt(20000); // 20 seconds
-                const currentTime = BigInt(Date.now()); // Current time in milliseconds
                 
-                // Check if current time is past the auto-execute time
-                return currentTime >= willAutoExecuteTime;
+                return Boolean(eventData.is_ready);
             }
         }
         return false;
@@ -179,35 +126,39 @@ class WillAutomationRelayer {
 }
 
     private async executeWillAutomatically(ownerAddress: string, willIndex: number) {
-        try {
-            const txb = new Transaction();
-            
-            txb.moveCall({
-                target: `${PACKAGE_ID}::willon_sui::execute_will_automatically`,
-                arguments: [
-                    txb.object(WILL_STORE_OBJECT_ID),
-                    txb.pure.address(ownerAddress),
-                    txb.pure.u64(BigInt(willIndex)),
-                    txb.object(CLOCK_OBJECT_ID),
-                ],
-            });
-            const result = await client.signAndExecuteTransaction({
-                signer: keypair,
-                transaction: txb,
-                options: { 
-                    showEvents: true, 
-                    showEffects: true,
-                    showObjectChanges: true 
-                },
-            });
+    try {
+        console.log(`🎯 Starting automatic execution for will ${ownerAddress}-${willIndex}`);
+        
+        const txb = new Transaction();
+        txb.moveCall({
+            target: `${PACKAGE_ID}::willon_sui::execute_will_automatically`,
+            arguments: [
+                txb.object(WILL_STORE_OBJECT_ID),
+                txb.pure.address(ownerAddress),
+                txb.pure.u64(BigInt(willIndex)),
+                txb.object(CLOCK_OBJECT_ID),
+            ],
+        });
+        
+        console.log(`📤 Signing and executing transaction...`);
+        const result = await client.signAndExecuteTransaction({
+            signer: keypair,
+            transaction: txb,
+            options: { 
+                showEvents: true, 
+                showEffects: true,
+                showObjectChanges: true 
+            },
+        });
 
-            console.log(`✅ Will executed successfully. Digest: ${result.digest}`);
-            return result;
-        } catch (error) {
-            console.error('❌ Error executing will automatically:', error);
-            throw error;
-        }
+        console.log(`✅ Will executed successfully. Digest: ${result.digest}`);
+        return result;
+    } catch (error) {
+        console.error('❌ Error executing will automatically:', error);
+        throw error;
     }
+}
+
 
     public getMonitoredWills() {
         return Array.from(this.activeWills.entries()).map(([key, info]) => ({
