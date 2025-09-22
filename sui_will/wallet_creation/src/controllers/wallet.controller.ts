@@ -113,8 +113,6 @@ export const getBalance = async (req: express.Request, res: express.Response) =>
         return res.status(500).json({ message: 'Error fetching balance' });
     }
 
-
-
 };
 export const transferTokens = async (req: express.Request, res: express.Response) => {
     try {
@@ -156,8 +154,6 @@ export const transferTokens = async (req: express.Request, res: express.Response
                     message: `Insufficient balance. Available: ${balance.totalBalance} MIST, Required: ${amountNum} MIST` 
                 });
             }
-
-            
             const tx = new Transaction();
             const [coinToTransfer] = tx.splitCoins(tx.gas, [amountNum]);
             tx.transferObjects([coinToTransfer], recipient);
