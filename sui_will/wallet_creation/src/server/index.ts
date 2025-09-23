@@ -1,3 +1,6 @@
+
+import helmet from 'helmet'
+
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -14,6 +17,21 @@ if (!process.env.MONGODB_URI) {
 }
 
 const app = express();
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"], 
+        scriptSrc: ["'self'"], 
+        styleSrc: ["'self'", "'unsafe-inline'"], 
+        connectSrc: ["'self'"],
+      },
+    },
+  })
+);
+
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
