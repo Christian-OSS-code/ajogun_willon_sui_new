@@ -6,59 +6,74 @@ import cors from 'cors';
 import { createWallet, getWallet, getBalance, transferTokens } from '../controllers/wallet.controller';
 import { createWill, initiateWillExecution, executeWill, revokeWill, checkWillReadyForExecution, updateActivity, executeWillAutomatically, getMonitoredWills, getAllWills } from '../controllers/will.controller';
 import willRoutes from '../routes/wil_router';
+import path from 'path';
 
 dotenv.config();
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Missing environment variable: MONGODB_URI');
 }
-
 const app = express();
 
-
-app.use(helmet({
-  
-  contentSecurityPolicy: false,
-  
-  crossOriginEmbedderPolicy: false 
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'none'"],
+        imgSrc: ["'self'", "data:", "https://ajogun-willon-sui-2.onrender.com"], 
+        scriptSrc: ["'self'"], 
+        styleSrc: ["'self'", "'unsafe-inline'"], 
+        connectSrc: ["'self'", "http://localhost:3000", "http://localhost:3001", "http://localhost:3002"], 
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        frameAncestors: ["'none'"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  optionsSuccessStatus: 200 
+  optionsSuccessStatus: 200,
 };
-
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); 
+app.options('*', cors(corsOptions));
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'), (err) => {
+    if (err) {
+      res.status(204).end(); 
+    }
+  });
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Connected to database'))
   .catch((err) => console.error('❌ Database connection error:', err));
 
-app.get('/favicon.ico', (req, res) => {
-  res.status(204).end();
-});
-
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
+  res.status(200).json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: '✅ API is running...',
     version: '1.0.0',
-    documentation: '/api/docs' 
+    documentation: '/api/docs',
   });
 });
 
@@ -67,14 +82,13 @@ app.get('/wallet/:userId', getWallet);
 app.get('/wallet/:userId/balance', getBalance);
 app.post('/wallet/:userId/transfer', transferTokens);
 
-
 app.use('/will', willRoutes);
 
 app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Route not found',
     path: req.originalUrl,
-    method: req.method
+    method: req.method,
   });
 });
 
@@ -82,7 +96,7 @@ app.use((error: any, req: express.Request, res: express.Response, next: express.
   console.error('🚨 Error:', error);
   res.status(error.status || 500).json({
     error: process.env.NODE_ENV === 'production' ? 'Something went wrong!' : error.message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: error.stack })
+    ...(process.env.NODE_ENV !== 'production' && { stack: error.stack }),
   });
 });
 
