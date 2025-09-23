@@ -21,16 +21,19 @@ const app = express();
 app.use(
   helmet({
     contentSecurityPolicy: {
+      useDefaults: false, 
       directives: {
         defaultSrc: ["'self'"],
-         imgSrc: ["'self'", "data:", "https:", "http:"], 
-        scriptSrc: ["'self'"], 
-        styleSrc: ["'self'", "'unsafe-inline'"], 
+        imgSrc: ["'self'", "data:", "https:", "http:"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
         connectSrc: ["'self'"],
+        objectSrc: ["'none'"], 
       },
     },
   })
 );
+
 
 
 const corsOptions = {
