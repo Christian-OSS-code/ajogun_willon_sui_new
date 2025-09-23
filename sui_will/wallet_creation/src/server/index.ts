@@ -6,60 +6,52 @@ import cors from 'cors';
 import { createWallet, getWallet, getBalance, transferTokens } from '../controllers/wallet.controller';
 import { createWill, initiateWillExecution, executeWill, revokeWill, checkWillReadyForExecution, updateActivity, executeWillAutomatically, getMonitoredWills, getAllWills } from '../controllers/will.controller';
 import willRoutes from '../routes/wil_router';
-import path from 'path';
 
 dotenv.config();
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Missing environment variable: MONGODB_URI');
 }
+
 const app = express();
 
+// ✅ CORS should come first
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'https://your-frontend-domain.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+// ✅ Then Helmet
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'none'"],
-        imgSrc: ["'self'", "data:", "https://ajogun-willon-sui-2.onrender.com"], 
-        scriptSrc: ["'self'"], 
-        styleSrc: ["'self'", "'unsafe-inline'"], 
-        connectSrc: ["'self'", "http://localhost:3000", "http://localhost:3001", "http://localhost:3002"], 
-        objectSrc: ["'none'"],
-        baseUri: ["'self'"],
-        formAction: ["'self'"],
-        frameAncestors: ["'none'"],
-      },
-    },
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
   })
 );
 
-const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
-
+// ✅ Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'), (err) => {
-    if (err) {
-      res.status(204).end(); 
-    }
-  });
-});
 
-app.use(express.static(path.join(__dirname, 'public')));
-
+// ✅ DB connect
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Connected to database'))
   .catch((err) => console.error('❌ Database connection error:', err));
+
+// ✅ Routes
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 app.get('/health', (req, res) => {
   res.status(200).json({
@@ -77,13 +69,16 @@ app.get('/', (req, res) => {
   });
 });
 
+// Wallet
 app.post('/wallet/create', createWallet);
 app.get('/wallet/:userId', getWallet);
 app.get('/wallet/:userId/balance', getBalance);
 app.post('/wallet/:userId/transfer', transferTokens);
 
+// Wills
 app.use('/will', willRoutes);
 
+// 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Route not found',
@@ -92,16 +87,21 @@ app.use('*', (req, res) => {
   });
 });
 
-app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('🚨 Error:', error);
-  res.status(error.status || 500).json({
-    error: process.env.NODE_ENV === 'production' ? 'Something went wrong!' : error.message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: error.stack }),
-  });
-});
+// Error handler
+app.use(
+  (error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('🚨 Error:', error);
+    res.status(error.status || 500).json({
+      error:
+        process.env.NODE_ENV === 'production'
+          ? 'Something went wrong!'
+          : error.message,
+      ...(process.env.NODE_ENV !== 'production' && { stack: error.stack }),
+    });
+  }
+);
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
