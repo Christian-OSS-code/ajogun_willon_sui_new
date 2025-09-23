@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { createWallet, getWallet, getBalance, transferTokens } from '../controllers/wallet.controller';
+import {createWill, initiateWillExecution, executeWill, revokeWill, checkWillReadyForExecution, updateActivity, executeWillAutomatically, getMonitoredWills, getAllWills} from '../controllers/will.controller';
 import willRoutes from '../routes/wil_router';
 
 dotenv.config();
@@ -13,7 +14,7 @@ if (!process.env.MONGODB_URI) {
 
 const app = express();
 app.use(cors({
-  origin: ['*'], 
+  origin: '*', 
   credentials: true, 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -34,6 +35,15 @@ app.get('/wallet/:userId', getWallet);
 app.get('/wallet/:userId/balance', getBalance);
 app.post('/wallet/:userId/transfer', transferTokens);
 app.use('/will', willRoutes);
+app.post('/create', createWill);
+app.post('/update-activity/:willIndex', updateActivity);
+app.post('/initiate/:willIndex/:ownerAddress', initiateWillExecution);
+app.post('/execute/:willIndex/:ownerAddress', executeWill);
+app.post('/execute-automatically/:ownerAddress/:willIndex', executeWillAutomatically);
+app.post('/revoke/:willIndex', revokeWill);
+app.get('/check-ready/:ownerAddress/:willIndex', checkWillReadyForExecution);
+app.get('/monitored-wills', getMonitoredWills);
+app.get('/all/:ownerAddress', getAllWills);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
