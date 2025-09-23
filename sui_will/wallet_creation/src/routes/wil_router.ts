@@ -12,6 +12,9 @@ import {
 } from '../controllers/will.controller';
 
 const router = Router();
+router.get('/', (req, res) => {
+  res.send('✅ API is running...');
+});
 router.post('/create', createWill);
 router.post('/update-activity/:willIndex', updateActivity);
 router.post('/initiate/:willIndex/:ownerAddress', initiateWillExecution);
