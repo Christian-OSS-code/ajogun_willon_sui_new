@@ -9,6 +9,7 @@ import { createWallet, getWallet, getBalance, transferTokens } from '../controll
 import { createWill, initiateWillExecution, executeWill, revokeWill, checkWillReadyForExecution, updateActivity, executeWillAutomatically, getMonitoredWills, getAllWills } from '../controllers/will.controller';
 import willRoutes from '../routes/wil_router';
 
+
 dotenv.config();
 
 
@@ -30,9 +31,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
-
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
   credentials: true,
@@ -51,6 +49,12 @@ mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to database'))
   .catch((err) => console.error('Database connection error:', err));  
+
+
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end(); 
+});
+
 
 app.get('/', (req, res) => {
   res.send('✅ API is running...');
