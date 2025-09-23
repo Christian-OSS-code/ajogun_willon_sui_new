@@ -1,11 +1,9 @@
-
-
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { createWallet, getWallet, getBalance, transferTokens } from '../controllers/wallet.controller';
 import willRoutes from '../routes/wil_router';
-
 
 dotenv.config();
 
@@ -14,6 +12,13 @@ if (!process.env.MONGODB_URI) {
 }
 
 const app = express();
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'], 
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 mongoose
@@ -24,7 +29,6 @@ mongoose
   .catch((err) => {
     console.error(' Database connection error:', err);
   });
-
 app.post('/wallet/create', createWallet);
 app.get('/wallet/:userId', getWallet);
 app.get('/wallet/:userId/balance', getBalance);
@@ -35,6 +39,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
-
-
