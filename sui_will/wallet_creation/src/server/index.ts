@@ -18,11 +18,18 @@ if (!process.env.MONGODB_URI) {
 
 const app = express();
 
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-  })
-);
+
+
+
+app.use((req, res, next) => {
+  res.removeHeader("Content-Security-Policy"); 
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; img-src 'self' data: https: http:; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'"
+  );
+  next();
+});
+
 
 
 
