@@ -44,16 +44,6 @@ app.post('/wallet/:userId/transfer', transferTokens);
 
 app.use('/will', willRoutes);
 
-app.post('/create', createWill);
-app.post('/update-activity/:willIndex', updateActivity);
-app.post('/initiate/:willIndex/:ownerAddress', initiateWillExecution);
-app.post('/execute/:willIndex/:ownerAddress', executeWill);
-app.post('/execute-automatically/:ownerAddress/:willIndex', executeWillAutomatically);
-app.post('/revoke/:willIndex', revokeWill);
-app.get('/check-ready/:ownerAddress/:willIndex', checkWillReadyForExecution);
-app.get('/monitored-wills', getMonitoredWills);
-app.get('/all/:ownerAddress', getAllWills);
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
