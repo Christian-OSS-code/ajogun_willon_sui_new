@@ -57,6 +57,7 @@ export const createWallet = async (req: express.Request, res: express.Response) 
         res.status(500).json({ message: "Error creating wallet" });
     }
 };
+
 export const verifyAndActivateWallet = async (req: express.Request, res: express.Response) => {
     try {
         const { userId, mnemonic, password } = req.body;

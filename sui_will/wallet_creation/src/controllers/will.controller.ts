@@ -24,6 +24,9 @@ const DEFAULT_VIEW_CALL_SENDER = process.env.DEFAULT_VIEW_CALL_SENDER || '0x262a
 const client = new SuiClient({ url: getFullnodeUrl('testnet') });
 
 const getKeyPair = async (userId: string, password: string): Promise<Ed25519Keypair> => {
+    console.log("🔍 Searching for wallet with userId:", userId);
+    console.log("🔍 Password provided:", password ? "Yes" : "No");
+
     const wallet = await WalletModel.findOne({ userId, isActive: true });
     if (!wallet) {
         throw new Error("User's Wallet Not Found");
@@ -34,7 +37,9 @@ const getKeyPair = async (userId: string, password: string): Promise<Ed25519Keyp
 
 export const createWill = async (req: express.Request, res: express.Response) => {
     try {
-        const { userId, password, heirs, shares, amount } = req.body;
+        const { userId, password, heirs, shares } = req.body;
+        const amount = req.body.amount ?? 0n;
+
         if (!Array.isArray(heirs) || !Array.isArray(shares) || heirs.length !== shares.length || heirs.length === 0) {
             throw new Error("Heirs and shares must be non-empty arrays of the same length.");
         }

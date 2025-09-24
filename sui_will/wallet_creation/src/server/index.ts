@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { createWallet, getWallet, getBalance, transferTokens,  verifyAndActivateWallet, importWallet, getWalletStatus, activateWalletAlternative} from '../controllers/wallet.controller';
-import { createWill, initiateWillExecution, executeWill, revokeWill, checkWillReadyForExecution, updateActivity, executeWillAutomatically, getMonitoredWills, getAllWills } from '../controllers/will.controller';
 import willRoutes from '../routes/wil_router';
 
 dotenv.config();
@@ -95,3 +94,4 @@ app.listen(PORT, () => {
 });
 
 export default app;
+
