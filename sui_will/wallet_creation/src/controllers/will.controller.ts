@@ -24,7 +24,7 @@ const DEFAULT_VIEW_CALL_SENDER = process.env.DEFAULT_VIEW_CALL_SENDER || '0x262a
 const client = new SuiClient({ url: getFullnodeUrl('testnet') });
 
 const getKeyPair = async (userId: string, password: string): Promise<Ed25519Keypair> => {
-    const wallet = await WalletModel.findOne({ userId });
+    const wallet = await WalletModel.findOne({ userId, isActive: true });
     if (!wallet) {
         throw new Error("User's Wallet Not Found");
     }
@@ -306,9 +306,6 @@ export const checkWillReadyForExecution = async (req: express.Request, res: expr
         }
     }
 };
-
-
-
 export const revokeWill = async (req: express.Request, res: express.Response) => {
     try {
         const { userId, password } = req.body;

@@ -1,7 +1,7 @@
 
 import { Schema, model } from 'mongoose';
 
-interface IWallet {
+export interface IWallet {
   userId: string;
   address: string;
   encryptedPrivateKey: string;
@@ -9,6 +9,7 @@ interface IWallet {
   encryptedMnemonic: string;
   mnemonicIv: string;
   salt: string;
+  isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -21,6 +22,8 @@ const walletSchema = new Schema<IWallet>(
     privateKeyIv: { type: String, required: true },
     encryptedMnemonic: { type: String, required: true },
     mnemonicIv: { type: String, required: true },
+    isActive: { type: Boolean, default: false, required: true },
+  
     salt: { type: String, required: true },
   },
   { timestamps: true }

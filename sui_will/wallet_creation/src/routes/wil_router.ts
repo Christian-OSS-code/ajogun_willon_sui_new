@@ -8,7 +8,7 @@ import {
     updateActivity, 
     executeWillAutomatically, 
     getMonitoredWills, 
-    getAllWills 
+    getAllWills,
 } from '../controllers/will.controller';
 
 const router = Router();
@@ -24,5 +24,6 @@ router.post('/revoke/:willIndex', revokeWill);
 router.get('/check-ready/:ownerAddress/:willIndex', checkWillReadyForExecution);
 router.get('/monitored-wills', getMonitoredWills);
 router.get('/all/:ownerAddress', getAllWills);
+
 
 export default router;
