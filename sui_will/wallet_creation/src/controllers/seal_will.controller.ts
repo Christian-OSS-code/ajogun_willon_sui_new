@@ -5,25 +5,23 @@ import { WillDetails } from '../service/seal_config';
 import { getKeyPair } from './will.controller'; 
 
 const sealService = new SealEncryptionService();
+import { createWill } from './will.controller';
 
 export const createWillWithDetails = async (req: express.Request, res: express.Response) => {
   try {
     const { userId, password, heirs, shares, amount, willDetails } = req.body;
-    const createWillResponse = await fetch(`http://localhost:${process.env.PORT || 3000}/will/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, password, heirs, shares, amount })
-    });
-
-    if (!createWillResponse.ok) {
-      throw new Error(`Will creation failed: ${createWillResponse.statusText}`);
-    }
-
-    const willResult = await createWillResponse.json();
+    
+    let willResult: any = {};
+    const mockRes = {
+      json: (data: any) => { willResult = data; },
+      status: (code: number) => mockRes
+    };
+    await createWill({ ...req, body: { userId, password, heirs, shares} } as express.Request, mockRes as any);
 
     if (willDetails && willResult.willIndex !== null) {
       const keyPair = await getKeyPair(userId, password);
       const ownerAddress = keyPair.getPublicKey().toSuiAddress();
+
       const encryptedData = await sealService.encryptWillDetails(
         willDetails,
         ownerAddress,
@@ -57,6 +55,7 @@ export const createWillWithDetails = async (req: express.Request, res: express.R
     });
   }
 };
+
 
 export const getWillDetails = async (req: express.Request, res: express.Response) => {
   try {

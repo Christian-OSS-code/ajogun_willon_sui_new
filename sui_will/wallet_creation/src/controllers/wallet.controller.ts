@@ -58,16 +58,23 @@ export const createWallet = async (req: express.Request, res: express.Response) 
     }
 };
 
+
+
 export const verifyAndActivateWallet = async (req: express.Request, res: express.Response) => {
     try {
         const { userId, mnemonic, password } = req.body;
 
         console.log("🔍 Searching for wallet with userId:", userId);
+        console.log("📩 Received data:", { userId, mnemonicLength: mnemonic?.length });
     
         const wallet = await WalletModel.findOne({ userId });
         
         if (!wallet) {
             console.log("❌ No wallet found for userId:", userId);
+            
+            const allWallets = await WalletModel.find({});
+            console.log("📋 All wallets in database:", allWallets.map(w => ({ userId: w.userId, address: w.address })));
+            
             return res.status(404).json({ 
                 message: 'Wallet not found. Please create a wallet first.' 
             });
@@ -76,8 +83,13 @@ export const verifyAndActivateWallet = async (req: express.Request, res: express
         console.log("✅ Found wallet:", {
             userId: wallet.userId,
             address: wallet.address,
-            isActive: wallet.isActive 
+            isActive: wallet.isActive,
+            hasIsActiveField: 'isActive' in wallet
         });
+
+        const normalizedMnemonic = mnemonic.trim().replace(/\s+/g, ' ');
+        console.log("🔐 Normalized mnemonic:", JSON.stringify(normalizedMnemonic));
+
         if (wallet.isActive === true) {
             console.log("ℹ️ Wallet is already active");
             return res.status(400).json({ 
@@ -86,7 +98,7 @@ export const verifyAndActivateWallet = async (req: express.Request, res: express
         }
 
         console.log("🔐 Verifying mnemonic...");
-        const keypairFromMnemonic = Ed25519Keypair.deriveKeypair(mnemonic);
+        const keypairFromMnemonic = Ed25519Keypair.deriveKeypair(normalizedMnemonic);
         const derivedAddress = keypairFromMnemonic.getPublicKey().toSuiAddress();
         
         console.log("📬 Derived address from mnemonic:", derivedAddress);
@@ -94,6 +106,15 @@ export const verifyAndActivateWallet = async (req: express.Request, res: express
         
         if (derivedAddress !== wallet.address) {
             console.log("❌ Mnemonic verification failed - addresses don't match");
+            
+            try {
+                const storedMnemonic = decrypt(wallet.encryptedMnemonic, wallet.mnemonicIv, password, wallet.salt);
+                console.log("🔍 Stored mnemonic (decrypted):", JSON.stringify(storedMnemonic));
+                console.log("🔍 Mnemonic match:", storedMnemonic === normalizedMnemonic);
+            } catch (decryptError) {
+                console.log("🔍 Could not decrypt stored mnemonic:", decryptError);
+            }
+            
             return res.status(400).json({ 
                 message: 'Invalid mnemonic. The mnemonic does not match the wallet address.' 
             });
@@ -118,6 +139,10 @@ export const verifyAndActivateWallet = async (req: express.Request, res: express
         res.status(500).json({ message: "Error activating wallet: " + (err instanceof Error ? err.message : String(err)) });
     }
 };
+
+
+
+
 
 export const importWallet = async (req: express.Request, res: express.Response) => {
     try {

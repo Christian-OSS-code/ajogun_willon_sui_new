@@ -395,7 +395,3 @@ export const getAllWills = async (req: express.Request, res: express.Response) =
 
 
 
-
-
-
-
