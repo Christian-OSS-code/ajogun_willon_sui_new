@@ -23,7 +23,7 @@ const DEFAULT_VIEW_CALL_SENDER = process.env.DEFAULT_VIEW_CALL_SENDER || '0x262a
 
 const client = new SuiClient({ url: getFullnodeUrl('testnet') });
 
-const getKeyPair = async (userId: string, password: string): Promise<Ed25519Keypair> => {
+export const getKeyPair = async (userId: string, password: string): Promise<Ed25519Keypair> => {
     console.log("🔍 Searching for wallet with userId:", userId);
     console.log("🔍 Password provided:", password ? "Yes" : "No");
 

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { createWallet, getWallet, getBalance, transferTokens,  verifyAndActivateWallet, importWallet, getWalletStatus, activateWalletAlternative} from '../controllers/wallet.controller';
 import willRoutes from '../routes/wil_router';
+import router from '../routes/seal_will.routes';
 
 dotenv.config();
 
@@ -65,6 +66,8 @@ app.post('/wallet/verify-activate', verifyAndActivateWallet);
 app.post('/wallet/activate-alternative', activateWalletAlternative);
 app.post('/wallet/import', importWallet);
 app.get('/wallet/:userId/status', getWalletStatus);
+app.use('/will', willRoutes); 
+app.use('/seal-will', router); 
 
 app.use('/will', willRoutes);
 

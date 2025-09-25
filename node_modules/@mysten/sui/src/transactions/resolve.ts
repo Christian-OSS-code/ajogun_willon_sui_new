@@ -8,7 +8,6 @@ import type { TransactionDataBuilder } from './TransactionData.js';
 import type { BcsType } from '@mysten/bcs';
 import { Inputs } from './Inputs.js';
 import { bcs } from '../bcs/index.js';
-import { namedPackagesPlugin } from './plugins/NamedPackagesPlugin.js';
 import { suiClientResolveTransactionPlugin } from '../experimental/transports/json-rpc-resolver.js';
 import type { SuiClient } from '../client/index.js';
 
@@ -64,11 +63,9 @@ export async function resolveTransactionPlugin(
 		client.core?.resolveTransactionPlugin() ??
 		suiClientResolveTransactionPlugin(client as SuiClient);
 
-	return namedPackagesPlugin()(transactionData, options, async () => {
-		await plugin(transactionData, options, async () => {
-			await validate(transactionData);
-			await next();
-		});
+	return plugin(transactionData, options, async () => {
+		await validate(transactionData);
+		await next();
 	});
 }
 

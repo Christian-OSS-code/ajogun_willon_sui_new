@@ -9,38 +9,6 @@ This is the Sui TypeScript SDK built on the Sui
 provides utility classes and functions for applications to sign transactions and interact with the
 Sui network.
 
-WARNING: Note that we are still iterating on the RPC and SDK API before TestNet, therefore please
-expect frequent breaking changes in the short-term. We expect the API to stabilize after the
-upcoming TestNet launch.
-
-## Working with Devnet
-
-The SDK will be published to [npm registry](https://www.npmjs.com/package/@mysten/sui) with the same
-bi-weekly release cycle as the Devnet validators and
-[RPC Server](https://github.com/MystenLabs/sui/blob/main/docs/content/references/sui-api.mdx). To
-use the SDK in your project, you can do:
-
-```bash
-$ npm install @mysten/sui
-```
-
-You can also use your preferred npm client, such as yarn or pnpm.
-
-## Working with local network
-
-Note that the `latest` tag for the [published SDK](https://www.npmjs.com/package/@mysten/sui) might
-go out of sync with the RPC server on the `main` branch until the next release. If you're developing
-against a local network, we recommend using the `experimental`-tagged packages, which contain the
-latest changes from `main`.
-
-```bash
-npm install @mysten/sui@experimental
-```
-
-Refer to the
-[JSON RPC](https://github.com/MystenLabs/sui/blob/main/docs/content/references/sui-api.mdx) topic
-for instructions about how to start a local network and local RPC server.
-
 ## Building Locally
 
 To get started you need to install [pnpm](https://pnpm.io/), then run the following command:
