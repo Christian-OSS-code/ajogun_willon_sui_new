@@ -9,15 +9,23 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const PACKAGE_ID='0xfd47885cc90005eb5a9ff49bee9b3b85c3961ee8fc731f0cb00b030033b7c069';
-const WILL_STORE_OBJECT_ID='0x8caa86a531bbe7cbcde2e23e99c928362cea98d6e226ffee7a6e01d5c4b156c4';
 
-const ADMIN_CAP_OBJECT_ID='0xb88b2abadb69ec6ef149c217b0ddcc64f37bc1b7bb98b0e81acff3d43abfbc2c';
+const PACKAGE_ID = process.env.PACKAGE_ID;
+
+const WILL_STORE_OBJECT_ID = process.env.WILL_STORE_OBJECT_ID;
+if (!WILL_STORE_OBJECT_ID) {
+    throw new Error("WILL_STORE_OBJECT_ID environment variable is not set");
+}
+
+const ADMIN_CAP_OBJECT_ID = process.env.ADMIN_CAP_OBJECT_ID;
 
 
-const UPGRADE_CAP_OBJECT_ID='0x11ee709344cad72fabb5cf9ba0c722f5e6b3d0da063a48da71b1c830d33ae4ff';
-const CLOCK_OBJECT_ID ='0x0000000000000000000000000000000000000000000000000000000000000006';
+const UPGRADE_CAP_OBJECT_ID = process.env.UPGRADE_CAP_OBJECT_ID;
 
+const CLOCK_OBJECT_ID = process.env.CLOCK_OBJECT_ID;
+if (!CLOCK_OBJECT_ID) {
+    throw new Error("CLOCK_OBJECT_ID environment variable is not set");
+}
 
 const DEFAULT_VIEW_CALL_SENDER = process.env.DEFAULT_VIEW_CALL_SENDER || '0x262a327a3ba54040171db252979f9286ca8ca247aebafbfc5538261f2903f44a';
 
