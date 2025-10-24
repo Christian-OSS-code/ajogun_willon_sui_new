@@ -9,6 +9,7 @@ const walletSchema = new mongoose_1.Schema({
     privateKeyIv: { type: String, required: true },
     encryptedMnemonic: { type: String, required: true },
     mnemonicIv: { type: String, required: true },
+    isActive: { type: Boolean, default: false, required: true },
     salt: { type: String, required: true },
 }, { timestamps: true });
 exports.WalletModel = (0, mongoose_1.model)('Wallet', walletSchema);

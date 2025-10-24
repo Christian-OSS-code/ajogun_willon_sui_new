@@ -1,27 +1,4 @@
 
-// {
-//   "compilerOptions": {
-//     "target": "ES2020",
-//     "lib": ["ES2020", "DOM"],
-//     "module": "commonjs",
-//     "strict": true,
-//     "esModuleInterop": true,
-//     "moduleResolution": "node",
-//     "types": ["node", "express", "bip39"],
-//     "outDir": "./dist",
-//     "rootDir": "./src",
-//     "allowSyntheticDefaultImports": true,
-//     "skipLibCheck": true
-//   },
-//   "include": ["src/**/*"],
-//   "exclude": ["node_modules", "dist"],
-//   "ts-node": {
-//     "transpileOnly": true,
-//     "require": ["ts-node/register"]
-//   }
-// }
-
-
 
 
 
@@ -30,7 +7,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["ES2020", "DOM"],
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
@@ -45,12 +22,12 @@
   "exclude": ["node_modules", "dist"],
   "ts-node": {
     "transpileOnly": true,
-    "require": ["ts-node/register"],
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
+    "require": ["ts-node/register"]
   }
 }
+
+
+
 
 
 
@@ -61,10 +38,10 @@
 //   "compilerOptions": {
 //     "target": "ES2020",
 //     "lib": ["ES2020", "DOM"],
-//     "module": "CommonJS",
+//     "module": "ESNext",
+//     "moduleResolution": "node",
 //     "strict": true,
 //     "esModuleInterop": true,
-//     "moduleResolution": "node",
 //     "types": ["node", "express", "bip39"],
 //     "outDir": "./dist",
 //     "rootDir": "./src",
@@ -76,6 +53,9 @@
 //   "exclude": ["node_modules", "dist"],
 //   "ts-node": {
 //     "transpileOnly": true,
-//     "require": ["ts-node/register"]
+//     "require": ["ts-node/register"],
+//     "compilerOptions": {
+//       "module": "CommonJS"
+//     }
 //   }
 // }
