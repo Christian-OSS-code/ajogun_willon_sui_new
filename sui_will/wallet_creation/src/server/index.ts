@@ -1,17 +1,34 @@
 import helmet from 'helmet';
 import express from 'express';
-import mongoose from 'mongoose';
+import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { createWallet, getWallet, getBalance, transferTokens,  verifyAndActivateWallet, importWallet, getWalletStatus, activateWalletAlternative} from '../controllers/wallet.controller';
 import willRoutes from '../routes/wil_router';
-// import router from '../routes/seal_will.routes';
 
 dotenv.config();
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Missing environment variable: MONGODB_URI');
+const prisma = new PrismaClient();
+
+interface PrismaConnectionSuccess {
+  message: string;
 }
+
+interface PrismaConnectionError {
+  error: Error;
+}
+
+prisma.$connect()
+  .then((): PrismaConnectionSuccess => {
+    console.log('✅ Connected to Prisma database');
+    return { message: '✅ Connected to Prisma database' };
+  })
+  .catch((err: Error): PrismaConnectionError => {
+    console.error('❌ Prisma database connection error:', err);
+    return { error: err };
+  });
+
+
 const app = express();
 const corsOptions = {
   origin: [
@@ -36,10 +53,8 @@ app.use(
 );
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ Connected to database'))
-  .catch((err) => console.error('❌ Database connection error:', err));
+
+
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
@@ -67,7 +82,7 @@ app.post('/wallet/activate-alternative', activateWalletAlternative);
 app.post('/wallet/import', importWallet);
 app.get('/wallet/:userId/status', getWalletStatus);
 app.use('/will', willRoutes); 
-// app.use('/seal-will', router); 
+
 
 app.use('/will', willRoutes);
 
